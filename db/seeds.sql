@@ -1,4 +1,4 @@
-INSERT INTO category (name)
+INSERT INTO category (category_name)
 VALUES
 ('Shirts'),
 ('Shorts'),
@@ -6,18 +6,18 @@ VALUES
 ('Hats'),
 ('Shoes');
 
-INSERT INTO tag (name)
+INSERT INTO tag (tag_name)
 VALUES
-('rock_music'),
-('pop_music'),
+('rock music'),
+('pop music'),
 ('blue'),
 ('red'),
 ('green'),
 ('white'),
 ('gold'),
-('pop_culture');
+('pop culture');
 
-INSERT INTO product (name, price, stock, category_id)
+INSERT INTO product (product_name, price, stock, category_id)
 VALUES
 ('Plain T-Shirt', 14.99, 14, 1),
 ('Running Sneakers', 90.0, 25, 5),
