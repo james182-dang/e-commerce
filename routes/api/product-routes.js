@@ -9,8 +9,8 @@ router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll({
-    attributes: ['id', 'product_name', 'price', 'stock',
-                [sequelize.literal('(SELECT COUNT(*) FROM tag WHERE product.id = tag.product_id'), 'tag_id']],
+    attributes: ['id', 'product_name', 'price', 'stock'],
+                // [sequelize.literal('SELECT * FROM product')]],
     include: [
       {
         model: Category,
@@ -22,6 +22,11 @@ router.get('/', (req, res) => {
       }
     ]
   })
+    .then(dbProductData => res.json(dbProductData))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 // get one product
@@ -40,11 +45,16 @@ router.get('/:id', (req, res) => {
         attributes: ['id', 'category_name']
       },
       {
-        model: Tag,
+        model: Tag, as: 'tags',
         attributes: ['id', 'tag_name']
       }
     ]
   })
+    .then(dbProductIdData => res.json(dbProductIdData))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 // create new product
@@ -74,7 +84,8 @@ router.post('/', (req, res) => {
     .catch((err) => {
       console.log(err);
       res.status(400).json(err);
-    });
+    })
+     .then((dbProductPostData => res.json(dbProductPostData)));
 });
 
 // update product
@@ -121,6 +132,22 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(dbProductDestroyData => {
+      if (!dbProductDestroyData) {
+        res.status(404).json({ message: 'No product found with that id' });
+        return;
+      }
+      res.json(dbProductDestroyData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
